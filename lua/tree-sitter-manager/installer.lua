@@ -5,8 +5,12 @@ local M = {}
 
 function M.get_repo_info(lang)
     local entry = config.effective_repos[lang]
-    if not entry then return nil end
-    if type(entry) == "string" then return { url = entry, location = lang } end
+    if not entry then
+        return nil
+    end
+    if type(entry) == "string" then
+        return { url = entry, location = lang }
+    end
     if entry.install_info then
         return {
             url = entry.install_info.url,
@@ -152,7 +156,10 @@ local function install_with_deps(lang, callback, installing)
         if not vim.uv.fs_stat(util.ppath(dep)) then
             vim.notify("📦 Installing dependency: " .. dep, vim.log.levels.INFO)
             install_with_deps(dep, function(ok)
-                if not ok then callback(false) return end
+                if not ok then
+                    callback(false)
+                    return
+                end
                 install_deps(i + 1)
             end, vim.deepcopy(installing))
         else
@@ -167,9 +174,13 @@ function M.install(lang, callback)
 end
 
 function M.remove(lang)
-    if vim.uv.fs_stat(util.ppath(lang)) then vim.uv.fs_unlink(util.ppath(lang)) end
+    if vim.uv.fs_stat(util.ppath(lang)) then
+        vim.uv.fs_unlink(util.ppath(lang))
+    end
     local qd = config.cfg.query_dir .. "/" .. lang
-    if vim.uv.fs_stat(qd) then vim.fn.delete(qd, "rf") end
+    if vim.uv.fs_stat(qd) then
+        vim.fn.delete(qd, "rf")
+    end
     vim.notify("✕ " .. lang)
 end
 
@@ -187,7 +198,9 @@ function M.install_new(lang, verbose)
     else
         installed = vim.uv.fs_stat(util.ppath(lang)) ~= nil
     end
-    if not installed then M.install(lang) end
+    if not installed then
+        M.install(lang)
+    end
 end
 
 return M
