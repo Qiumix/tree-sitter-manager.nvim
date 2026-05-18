@@ -94,7 +94,9 @@ function M._install_single(lang, callback)
             util.run_cmd({ "tree-sitter", "build", "-o", util.ppath(lang) }, build_dir, function(build)
                 if not build.ok then
                     local err = build.output
-                    if #err > 500 then err = err:sub(-500) end
+                    if #err > 500 then
+                        err = err:sub(-500)
+                    end
                     vim.notify("Build failed for " .. lang .. ":\n" .. err, 3)
                     vim.fn.delete(tmp, "rf")
                     callback(false)
@@ -105,7 +107,10 @@ function M._install_single(lang, callback)
                 if info.use_repo_queries then
                     used_repo_queries = copy_queries_from_repo(lang, build_dir)
                     if not used_repo_queries then
-                        vim.notify("⚠ No queries/ found in repo for " .. lang .. ", falling back to bundled queries", 2)
+                        vim.notify(
+                            "⚠ No queries/ found in repo for " .. lang .. ", falling back to bundled queries",
+                            2
+                        )
                     end
                 end
 
